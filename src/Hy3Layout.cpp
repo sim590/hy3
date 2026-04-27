@@ -694,7 +694,7 @@ void Hy3Layout::makeOppositeGroupOn(Hy3Node& node, GroupEphemeralityOption ephem
 	auto layout =
 	    group.layout == Hy3GroupLayout::SplitH ? Hy3GroupLayout::SplitV : Hy3GroupLayout::SplitH;
 
-	if (group.children.size() == 1) {
+	if (group.children.size() == 1 && group.isSplit()) {
 		group.setLayout(layout);
 		group.setEphemeral(ephemeral);
 		this->recalcGeometry();
@@ -1477,7 +1477,9 @@ Hy3Node* Hy3Layout::shiftOrGetFocus(
 
 			// if this movement would break out of the group, continue the break loop
 			// (do not enter this if) otherwise break.
-			if ((has_broken_once && shift && (once || group.isTab()))
+			if ((has_broken_once && shift
+			     && (once || group.isTab()
+			         || (break_parent->parent && break_parent->parent->as_group().isTab())))
 			    || !(
 			        (!shiftIsForward(direction) && group.children.front().get() == break_origin)
 			        || (shiftIsForward(direction) && group.children.back().get() == break_origin)
