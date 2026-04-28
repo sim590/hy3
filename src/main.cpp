@@ -152,12 +152,13 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
 		g_focusedMonitor = monitor;
 
 		for (auto& mon: g_pCompositor->m_monitors) {
-			auto ws = mon->m_activeWorkspace;
-			if (!ws) continue;
-			auto* hy3 = hy3InstanceForWorkspace(ws);
-			if (!hy3) continue;
-			auto* root = hy3->getWorkspaceRootGroup(ws.get());
-			if (root) root->updateDecos();
+			for (auto& ws: {mon->m_activeWorkspace, mon->m_activeSpecialWorkspace}) {
+				if (!ws) continue;
+				auto* hy3 = hy3InstanceForWorkspace(ws);
+				if (!hy3) continue;
+				auto* root = hy3->getWorkspaceRootGroup(ws.get());
+				if (root) root->updateDecos();
+			}
 		}
 	});
 
