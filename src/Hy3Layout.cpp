@@ -985,8 +985,10 @@ void Hy3Layout::moveNodeToWorkspace(
 
 		monitor->changeWorkspace(workspace);
 
-		node->layout()->recalcGeometry();
-		node->focus(warp, Desktop::FOCUS_REASON_KEYBIND);
+		if (node != nullptr) {
+			node->layout()->recalcGeometry();
+			node->focus(warp, Desktop::FOCUS_REASON_KEYBIND);
+		}
 	} else {
 		// When not following, refocus the origin workspace so a remaining node
 		// receives focus.  Without this, moving a window out of a special
