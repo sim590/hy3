@@ -1019,7 +1019,6 @@ void Hy3Layout::moveNodeToWorkspace(
 		if (refocus != nullptr) {
 			refocus->focus(false, Desktop::FOCUS_REASON_KEYBIND);
 		}
-		}
 	}
 }
 
