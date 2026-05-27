@@ -40,4 +40,18 @@ endif()
 
 target_include_directories(hy3 PRIVATE ${DEPS_INCLUDE_DIRS})
 
+# CMake's pkg_check_modules strips include dirs that are subdirectories of
+# system include paths (e.g. /usr/include/hyprland/src is dropped because
+# /usr/include is implicit).  Re-parse pkg-config output to recover them.
+execute_process(
+	COMMAND ${PKG_CONFIG_EXECUTABLE} --cflags-only-I hyprland
+	OUTPUT_VARIABLE _hyprland_cflags
+	OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+string(REGEX MATCHALL "-I([^ ]+)" _hyprland_includes "${_hyprland_cflags}")
+foreach(_inc ${_hyprland_includes})
+	string(REGEX REPLACE "^-I" "" _inc_path "${_inc}")
+	target_include_directories(hy3 PRIVATE ${_inc_path})
+endforeach()
+
 install(TARGETS hy3 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
